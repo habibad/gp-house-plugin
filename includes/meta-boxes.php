@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'add_meta_boxes', function () {
 	$titles = array(
 		'gp_stay'        => __( 'Stay details', 'gp-house-core' ),
+		'gp_room'        => __( 'Room details', 'gp-house-core' ),
+		'gp_offer'       => __( 'Offer details', 'gp-house-core' ),
 		'gp_testimonial' => __( 'Guest details', 'gp-house-core' ),
 		'post'           => __( 'Journal story details', 'gp-house-core' ),
 	);

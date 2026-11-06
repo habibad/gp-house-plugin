@@ -29,3 +29,32 @@
 		frame.open();
 	} );
 }() );
+
+/* Gallery field: pick several photos in order. */
+( function () {
+	document.addEventListener( 'click', function ( e ) {
+		var pick = e.target.closest( '[data-gp-gallery-pick]' );
+		if ( ! pick ) return;
+		e.preventDefault();
+		var box = pick.closest( '[data-gp-gallery]' );
+		var input = box.querySelector( 'input' );
+		var list = box.querySelector( '.gp-core-gallery__list' );
+		var frame = wp.media( { title: 'Select photos', multiple: 'add', library: { type: 'image' } } );
+		frame.on( 'open', function () {
+			var sel = frame.state().get( 'selection' );
+			input.value.split( ',' ).filter( Boolean ).forEach( function ( id ) {
+				var att = wp.media.attachment( id );
+				att.fetch();
+				sel.add( att );
+			} );
+		} );
+		frame.on( 'select', function () {
+			var atts = frame.state().get( 'selection' ).toJSON();
+			input.value = atts.map( function ( a ) { return a.id; } ).join( ',' );
+			list.innerHTML = atts.map( function ( a ) {
+				return '<img src="' + ( a.sizes && a.sizes.thumbnail ? a.sizes.thumbnail : a ).url + '" alt="">';
+			} ).join( '' );
+		} );
+		frame.open();
+	} );
+}() );

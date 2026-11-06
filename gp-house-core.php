@@ -3,7 +3,7 @@
  * Plugin Name: GP House Core
  * Description: Content model for the GP House site — Stays, Destinations, Guest Testimonials and Journal story details — plus a one-click import of the Figma demo content.
  * Version:     1.0.0
- * Author:      GP House
+ * Author:      Md Anikur Rahaman
  * Requires at least: 6.4
  * Requires PHP: 8.0
  * Text Domain: gp-house-core
@@ -21,6 +21,7 @@ require GP_CORE_DIR . 'includes/post-types.php';
 require GP_CORE_DIR . 'includes/fields.php';
 require GP_CORE_DIR . 'includes/meta-boxes.php';
 require GP_CORE_DIR . 'includes/demo-import.php';
+require GP_CORE_DIR . 'includes/inquiries.php';
 
 register_activation_hook( __FILE__, function () {
 	gp_core_register_content_types();
