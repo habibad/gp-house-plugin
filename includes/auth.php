@@ -360,7 +360,9 @@ function gp_core_handle_logout() {
 /* Members stay out of wp-admin ------------------------------------------------ */
 
 add_action( 'admin_init', function () {
-	if ( wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+	global $pagenow;
+	// admin-post.php also fires admin_init: sign-out, profile save and the owner inquiry form must keep working for members.
+	if ( wp_doing_ajax() || wp_doing_cron() || 'admin-post.php' === $pagenow || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
 	}
 	if ( is_user_logged_in() && ! current_user_can( 'edit_posts' ) ) {

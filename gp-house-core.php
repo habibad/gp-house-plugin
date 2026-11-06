@@ -22,6 +22,7 @@ require GP_CORE_DIR . 'includes/fields.php';
 require GP_CORE_DIR . 'includes/meta-boxes.php';
 require GP_CORE_DIR . 'includes/demo-import.php';
 require GP_CORE_DIR . 'includes/inquiries.php';
+require GP_CORE_DIR . 'includes/auth.php';
 
 register_activation_hook( __FILE__, function () {
 	gp_core_register_content_types();
