@@ -333,7 +333,7 @@ function gp_core_import_demo() {
 	// Pages whose templates live in the theme (page-<slug>.php).
 	foreach ( $content['pages'] ?? array() as $slug => $title ) {
 		if ( ! get_page_by_path( $slug ) ) {
-			wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title ) );
+			wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title, 'post_content' => (string) ( $content['page_content'][ $slug ] ?? '' ) ) );
 		}
 	}
 

@@ -50,6 +50,11 @@ function gp_core_handle_inquiry() {
 		exit;
 	}
 
+	if ( function_exists( 'gp_core_rate_limit' ) && ! gp_core_rate_limit( 'inquiry|' . gp_core_client_ip(), 6, HOUR_IN_SECONDS ) ) {
+		wp_safe_redirect( add_query_arg( 'inquiry', 'error', $back ) . '#inquiry' );
+		exit;
+	}
+	$type = isset( $_POST['type'] ) && 'contact' === sanitize_key( wp_unslash( $_POST['type'] ) ) ? 'contact' : 'owner';
 	$data = array();
 	foreach ( array_keys( gp_core_inquiry_fields() ) as $key ) {
 		$raw          = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '';
@@ -60,7 +65,7 @@ function gp_core_handle_inquiry() {
 		exit;
 	}
 
-	$id = wp_insert_post( array( 'post_type' => 'gp_inquiry', 'post_status' => 'publish', 'post_title' => $data['property'] ? $data['property'] . ' — ' . $data['name'] : $data['name'] ) );
+	$id = wp_insert_post( array( 'post_type' => 'gp_inquiry', 'post_status' => 'publish', 'post_title' => $data['property'] ? $data['property'] . ' — ' . $data['name'] : ( 'contact' === $type ? __( 'Contact', 'gp-house-core' ) . ' — ' . $data['name'] : $data['name'] ) ) );
 	$lines = array();
 	foreach ( gp_core_inquiry_fields() as $key => $label ) {
 		if ( $id && ! is_wp_error( $id ) ) {
@@ -68,7 +73,10 @@ function gp_core_handle_inquiry() {
 		}
 		$lines[] = $label . ': ' . $data[ $key ];
 	}
-	wp_mail( get_option( 'admin_email' ), sprintf( '[%s] New owner inquiry — %s', wp_specialchars_decode( get_bloginfo( 'name' ) ), $data['name'] ), implode( "\n", $lines ), array( 'Reply-To: ' . $data['name'] . ' <' . $data['email'] . '>' ) );
+	if ( $id && ! is_wp_error( $id ) ) {
+		update_post_meta( $id, 'gp_inq_type', $type );
+	}
+	wp_mail( get_option( 'admin_email' ), sprintf( 'contact' === $type ? '[%s] New contact message — %s' : '[%s] New owner inquiry — %s', wp_specialchars_decode( get_bloginfo( 'name' ) ), $data['name'] ), implode( "\n", $lines ), array( 'Reply-To: ' . $data['name'] . ' <' . $data['email'] . '>' ) );
 
 	wp_safe_redirect( add_query_arg( 'inquiry', 'sent', $back ) . '#inquiry' );
 	exit;
