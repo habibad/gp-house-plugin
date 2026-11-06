@@ -23,6 +23,7 @@ require GP_CORE_DIR . 'includes/meta-boxes.php';
 require GP_CORE_DIR . 'includes/demo-import.php';
 require GP_CORE_DIR . 'includes/inquiries.php';
 require GP_CORE_DIR . 'includes/auth.php';
+require GP_CORE_DIR . 'includes/reviews.php';
 require GP_CORE_DIR . 'includes/mail-check.php';
 
 register_activation_hook( __FILE__, function () {
